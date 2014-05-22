@@ -1,0 +1,8 @@
+---
+#server config flume
+
+- name: flume server install
+  hosts: server
+  user: root
+  roles:
+    - server

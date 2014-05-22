@@ -1,0 +1,19 @@
+---
+- name: copy flume bin
+  synchronize: src=/publish/flume dest=/usr/local
+
+- name: copy client.conf
+  template: src=client.conf dest=/usr/local/flume/apache-flume-1.4.0-bin/conf/client.conf
+
+- name: mkdir flume log folde
+  command: mkdir -p /data1/logs/flume
+
+- name: build java_home
+  shell: /usr/local/flume/apache-flume-1.4.0-bin/conf/flume-env.sh
+
+#- name: kill flume pid
+#  shell: /bin/kill `ps -fe|grep '/usr/local/flume/apache-flume-1.4.0-bin' |grep -v grep| awk '{print $2}'`
+
+- name: start flume-ng
+  no_log: True
+  command: chdir=/usr/local/flume/apache-flume-1.4.0-bin sh -c "/usr/bin/nohup /usr/local/flume/apache-flume-1.4.0-bin/bin/flume-ng agent -c conf -f conf/client.conf -n agent -Dflume.root.logger=INFO,console >> /data1/logs/flume/server.log 2>&1 &"
